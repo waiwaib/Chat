@@ -230,17 +230,22 @@ struct UIList<MessageContent: View>: UIViewRepresentable {
             tableViewCell.backgroundColor = UIColor(mainBackgroundColor)
 
             let row = sections[indexPath.section].rows[indexPath.row]
+          
+          if #available(iOS 16.0, *) {
             tableViewCell.contentConfiguration = UIHostingConfiguration {
-                ChatMessageView(viewModel: viewModel, messageBuilder: messageBuilder, row: row, avatarSize: avatarSize, messageUseMarkdown: messageUseMarkdown, isDisplayingMessageMenu: false)
-                    .background(MessageMenuPreferenceViewSetter(id: row.id))
-                    .rotationEffect(Angle(degrees: 180))
-                    .onTapGesture { }
-                    .onLongPressGesture {
-                        self.viewModel.messageMenuRow = row
-                    }
+              ChatMessageView(viewModel: viewModel, messageBuilder: messageBuilder, row: row, avatarSize: avatarSize, messageUseMarkdown: messageUseMarkdown, isDisplayingMessageMenu: false)
+                .background(MessageMenuPreferenceViewSetter(id: row.id))
+                .rotationEffect(Angle(degrees: 180))
+                .onTapGesture { }
+                .onLongPressGesture {
+                  self.viewModel.messageMenuRow = row
+                }
             }
             .minSize(width: 0, height: 0)
             .margins(.all, 0)
+          } else {
+            // Fallback on earlier versions
+          }
 
             return tableViewCell
         }
